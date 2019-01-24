@@ -57,7 +57,7 @@ public class WechatServiceImpl implements WechatService {
             }
             // 2.封装其他信息
             wxNewsInfo.setAuthor("llsydn");
-            wxNewsInfo.setDigest("中山开放大学党总支组织参观中山市庆祝改革开放40周年展览");//图文消息的描述，如本字段为空，则默认抓取正文前64个字
+            wxNewsInfo.setDigest("为深入学习习近平总书记在庆祝改革开放40周年大会上的重要讲话...");//图文消息的描述，如本字段为空，则默认抓取正文前64个字
             wxNewsInfo.setTitle("中山开放大学党总支组织参观中山市庆祝改革开放40周年展览");//图文消息的标题
             wxNewsInfo.setContent_source_url("www.taobao.com");//在图文消息页面点击“阅读原文”后的页面
             wxNewsInfo.setShow_cover_pic(0); //是否显示封面，1为显示，0为不显示
@@ -71,7 +71,7 @@ public class WechatServiceImpl implements WechatService {
 
             // 3.上传群发图文素材
             String mediaId = iService.addNewsMedia(wxNewsInfoList);
-            mediaId = "rD00SW7wAfsG1KoJxcbEs81Rd7yiJfDAYtHT3wSHdxo";
+            // mediaId = "rD00SW7wAfsG1KoJxcbEs81Rd7yiJfDAYtHT3wSHdxo";
             LOGGER.info("----------上传图文素材的mediaId:{}----------" + mediaId);
 
             // 4.群发图文信息（测试账号只能群发预览的图文信息，可以群发文本信息）
@@ -95,6 +95,7 @@ public class WechatServiceImpl implements WechatService {
             // 群发预览图文信息
             PreviewSender previewSender = new PreviewSender();
             // previewSender.setTouser("owuCb1byYreqo9BEUwgVgJ1_0EPI");
+            // TODO 需要修改为自己的openid
             previewSender.setTouser("op5v856uhhacVQiDAkRrr1PQTE-k");
             SenderContent.Media media = new SenderContent.Media();
             media.setMedia_id(mediaId);
