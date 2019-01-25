@@ -126,4 +126,16 @@ public class WechatController {
         return "sendall";
     }
 
+    /**
+     * 发送模板信息
+     *
+     * @return
+     */
+    @RequestMapping(value = "/sendTemplate")
+    @ResponseBody
+    public String sendTemplate() {
+        wechatService.sendTemplate();
+        return "sendTemplate";
+    }
+
 }

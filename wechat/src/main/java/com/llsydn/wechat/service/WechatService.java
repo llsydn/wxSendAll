@@ -10,4 +10,5 @@ public interface WechatService {
 
     boolean sendMessageToAll();
 
+    boolean sendTemplate();
 }

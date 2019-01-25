@@ -1,11 +1,13 @@
 package com.llsydn.wechat.service.impl;
 
+import com.llsydn.wechat.entity.TradeTemplate;
 import com.llsydn.wechat.service.WechatService;
 import com.soecode.wxtools.api.IService;
 import com.soecode.wxtools.api.WxConsts;
 import com.soecode.wxtools.api.WxService;
 import com.soecode.wxtools.bean.*;
 import com.soecode.wxtools.bean.result.SenderResult;
+import com.soecode.wxtools.bean.result.TemplateSenderResult;
 import com.soecode.wxtools.bean.result.WxMediaUploadResult;
 import com.soecode.wxtools.exception.WxErrorException;
 import org.jsoup.Jsoup;
@@ -20,8 +22,8 @@ import org.springframework.util.StringUtils;
 
 import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author lilinshen
@@ -36,6 +38,11 @@ public class WechatServiceImpl implements WechatService {
     @Value("${spring.profiles.active}")
     private String active;
 
+    /**
+     * 群发图文信息
+     *
+     * @return
+     */
     @Override
     public boolean sendMessageToAll() {
         boolean flag = false;
@@ -95,8 +102,8 @@ public class WechatServiceImpl implements WechatService {
 
             // 群发预览图文信息
             PreviewSender previewSender = new PreviewSender();
-            previewSender.setTouser("owuCb1byYreqo9BEUwgVgJ1_0EPI");
             // TODO 需要修改为自己的openid
+            previewSender.setTouser("owuCb1byYreqo9BEUwgVgJ1_0EPI");
             // previewSender.setTouser("op5v856uhhacVQiDAkRrr1PQTE-k");
             SenderContent.Media media = new SenderContent.Media();
             media.setMedia_id(mediaId);
@@ -133,6 +140,61 @@ public class WechatServiceImpl implements WechatService {
             e.printStackTrace();
         }
         return flag;
+    }
+
+    /**
+     * 发送模板信息
+     *
+     * @return
+     */
+    @Override
+    public boolean sendTemplate() {
+        // 测试数据
+        TradeTemplate tradeTemplate = new TradeTemplate();
+        Map<String, String> tempData = new HashMap<>();
+        tempData.put("value", "杨先生");
+        tempData.put("color", "#173177");
+        tradeTemplate.setUser(tempData);
+
+        tempData = new HashMap<>();
+        tempData.put("value", "0426");
+        tempData.put("color", "#173177");
+        tradeTemplate.setNumber(tempData);
+
+        Date currentTime = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("MM月dd日 HH时mm分");
+        String dateString = formatter.format(currentTime);
+        tempData = new HashMap<>();
+        tempData.put("value", dateString);
+        tempData.put("color", "#173177");
+        tradeTemplate.setDate(tempData);
+
+        tempData = new HashMap<>();
+        tempData.put("value", "人民币250.00元");
+        tempData.put("color", "#173177");
+        tradeTemplate.setAmountText(tempData);
+
+        tempData = new HashMap<>();
+        tempData.put("value", "190428.00");
+        tempData.put("color", "#173177");
+        tradeTemplate.setMoney(tempData);
+
+        TemplateSender sender = new TemplateSender();
+        // TODO 需要修改为自己的openid
+        sender.setTouser("owuCb1byYreqo9BEUwgVgJ1_0EPI");
+        // sender.setTouser("owuCb1fE2hF6SfCY5wJCWvUNwJlo");
+        // TODO 需要修改为自己的TemplateId
+        sender.setTemplate_id("-ogvOODkWu8TXzj9HuTN6Vu_ySQaTuIHop3U-bvALvQ");
+        sender.setData(tradeTemplate);
+        sender.setUrl("www.taobao.com");
+        try {
+            TemplateSenderResult result = iService.templateSend(sender);
+            System.out.println(result.toString());
+        } catch (WxErrorException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     /**
