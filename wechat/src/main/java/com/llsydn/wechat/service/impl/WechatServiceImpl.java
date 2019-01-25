@@ -46,7 +46,7 @@ public class WechatServiceImpl implements WechatService {
             // 1.上传封面图片
             WxNewsInfo wxNewsInfo = new WxNewsInfo();
             try {
-                File file = new File(resoucePath + "title.jpg");
+                File file = new File(resoucePath + "qunianxiatian.jpg");
                 WxMediaUploadResult result = iService.uploadMedia(WxConsts.MEDIA_IMAGE, file, null);
                 if (!StringUtils.isEmpty(result.getMedia_id())) {
                     wxNewsInfo.setThumb_media_id(result.getMedia_id());
@@ -57,21 +57,22 @@ public class WechatServiceImpl implements WechatService {
             }
             // 2.封装其他信息
             wxNewsInfo.setAuthor("llsydn");
-            wxNewsInfo.setDigest("为深入学习习近平总书记在庆祝改革开放40周年大会上的重要讲话...");//图文消息的描述，如本字段为空，则默认抓取正文前64个字
-            wxNewsInfo.setTitle("中山开放大学党总支组织参观中山市庆祝改革开放40周年展览");//图文消息的标题
-            wxNewsInfo.setContent_source_url("www.taobao.com");//在图文消息页面点击“阅读原文”后的页面
+            // wxNewsInfo.setDigest("为深入学习习近平总书记在庆祝改革开放40周年大会上的重要讲话...");//图文消息的描述，如本字段为空，则默认抓取正文前64个字
+            wxNewsInfo.setTitle("怎样解读《去年夏天》这首歌？");//图文消息的标题
+            wxNewsInfo.setContent_source_url("jingyan.baidu.com/article/9c69d48fda35da13c9024e23.html");//在图文消息页面点击“阅读原文”后的页面
             wxNewsInfo.setShow_cover_pic(0); //是否显示封面，1为显示，0为不显示
             wxNewsInfo.setNeed_open_comment(1); //Uint32 是否打开评论，0不打开，1打开
             wxNewsInfo.setOnly_fans_can_comment(1); //Uint32 是否粉丝才可评论，0所有人可评论，1粉丝才可评论
 
-            String content = readFileToString(resoucePath + "content.html");
+            String content = readFileToString(resoucePath + "qunianxiatian.html");
             content = handStringImg(content);
             wxNewsInfo.setContent(content);//图文消息页面的内容，支持HTML标签
             wxNewsInfoList.add(wxNewsInfo);
 
             // 3.上传群发图文素材
             String mediaId = iService.addNewsMedia(wxNewsInfoList);
-            // mediaId = "rD00SW7wAfsG1KoJxcbEs81Rd7yiJfDAYtHT3wSHdxo";
+            // String mediaId = "rD00SW7wAfsG1KoJxcbEs81Rd7yiJfDAYtHT3wSHdxo"; // （中山）
+            // String mediaId = "Aq5btHcFc2cKaC_gvFGfW48pGEHOrv9P7bSrKaAEe0E"; // （去年夏天）
             LOGGER.info("----------上传图文素材的mediaId:{}----------" + mediaId);
 
             // 4.群发图文信息（测试账号只能群发预览的图文信息，可以群发文本信息）
@@ -94,9 +95,9 @@ public class WechatServiceImpl implements WechatService {
 
             // 群发预览图文信息
             PreviewSender previewSender = new PreviewSender();
-            // previewSender.setTouser("owuCb1byYreqo9BEUwgVgJ1_0EPI");
+            previewSender.setTouser("owuCb1byYreqo9BEUwgVgJ1_0EPI");
             // TODO 需要修改为自己的openid
-            previewSender.setTouser("op5v856uhhacVQiDAkRrr1PQTE-k");
+            // previewSender.setTouser("op5v856uhhacVQiDAkRrr1PQTE-k");
             SenderContent.Media media = new SenderContent.Media();
             media.setMedia_id(mediaId);
             previewSender.setMpnews(media);
